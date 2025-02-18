@@ -3,20 +3,51 @@ import java.util.Arrays;
 
 public class Block {
     public  char id;
-    // public ArrayList<char[]> shape; ini yang benar, bawah untuk debug aja
-    public ArrayList<String> shape;
     public char[][] shape; //ini yang benar, bawah untuk debug aja
     public int rows;
     public int cols;
 
     public Block(char id, ArrayList<String> shape){
         this.id = id;
-        this.shape = shape;
         this.shape = filterEmptyColumns(padAndFormatShape(shape));
         this.rows = this.shape.length;
         this.cols = this.shape[0].length;
     }
-}
+
+    // Mengembalikan jumlah cell efektif, yaitu cell yang berisikan huruf (untuk keperluan menghitung papan)
+    public int getEffectiveCells(){
+        int effCells = 0;
+        for (int i = 0; i < rows; i++){
+            for (int j = 0; j < cols; j++){
+                if (shape[i][j] == id) effCells++;
+                
+            }
+        }
+        return effCells;
+    }
+
+
+    public static void printCharMatrix(char[][] charMatrix){
+        int rows = charMatrix.length;
+        int cols = charMatrix[0].length;
+        System.out.print("[\n  ");
+        for (int i = 0; i < rows; i++) {
+            System.out.print("[");
+            for (int j = 0; j < cols; j++) {
+                System.out.print("'" + charMatrix[i][j] + "'");
+                if (j < cols - 1) {
+                    System.out.print(", ");
+                }
+            }
+            System.out.print(" ]");
+            if (i < rows - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println("\n]\n");
+    }
+    
+    // TODO: hapus kolom dimana semua elemen pada satu kolom = ' ' 
     private static ArrayList<char[]> padAndFormatShape(ArrayList<String> shape){
         ArrayList<char[]> formattedShape = new ArrayList<>();
         
