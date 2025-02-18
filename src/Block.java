@@ -39,3 +39,36 @@ public class Block {
         }
         return formattedShape;
     }
+
+    // Menghapus kolom "kosong", yaitu kolom yang tidak berisi huruf
+    private static char[][] filterEmptyColumns(ArrayList<char[]> formattedShape) {
+        int rows = formattedShape.size();
+        int cols = formattedShape.get(0).length;
+        boolean[] keepColumn = new boolean[cols];
+        int finalCols = 0;
+
+        // Menandai kolom2 yang dikeep
+        for (int j = 0; j < cols; j++) {
+            for (int i = 0; i < rows; i++) {
+                if (formattedShape.get(i)[j] != ' ') {
+                    keepColumn[j] = true;
+                    finalCols++;
+                    break;
+                }
+            }
+        }
+
+        char[][] filteredShape = new char[rows][finalCols];
+        for (int i = 0; i < rows; i++) {
+            int newCol = 0;
+            for (int j = 0; j < cols; j++) {
+                if (keepColumn[j]) {
+                    filteredShape[i][newCol++] = formattedShape.get(i)[j];
+                }
+            }
+        }
+        
+        return filteredShape;
+    }
+
+
