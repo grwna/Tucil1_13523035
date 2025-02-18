@@ -72,3 +72,50 @@ public class Block {
     }
 
 
+    // Merotasi block sebanyak 90 degree cw, sebanyak 'rotation' kali
+    public char[][] rotateBlock(int rotation) {
+        char[][] rotatedShape = new char[rows][cols];
+        int rows = this.rows;
+        int cols = this.cols;
+        switch (rotation) {
+            default:
+                return this.shape;
+            case 1: // 90 deg
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        rotatedShape[j][rows - 1 - i] = shape[i][j];}}
+                break;
+            case 2: // 180 deg
+                rotatedShape = new char[rows][cols];
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        rotatedShape[rows - 1 - i][cols - 1 - j] = shape[i][j];}}
+                break;
+            case 3: // 270 deg
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        rotatedShape[cols - 1 - j][i] = shape[i][j];}}
+                break;
+        }
+        return rotatedShape;
+    }
+
+    public char[][] mirrorBlock(int mirrorMode){
+            char[][] mirrored = new char[rows][cols];
+            switch (mirrorMode) {
+                case 0: // No mirror
+                    return shape;
+                case 1: // Horizontal
+                    for (int i = 0; i < rows; i++) {
+                        for (int j = 0; j < cols; j++) {
+                            mirrored[i][cols - 1 - j] = shape[i][j];}}
+                    break;
+                case 2: // Vertical
+                    for (int i = 0; i < rows; i++) {
+                        for (int j = 0; j < cols; j++) {
+                            mirrored[rows - 1 - i][j] = shape[i][j];}}
+                    break;
+            }
+            return mirrored;
+    }
+}
