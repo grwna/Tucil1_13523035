@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
+// Class untuk menghandle Block dan cara2 memodifikasinya
 public class Block {
     public  char id;
     public char[][] shape; //ini yang benar, bawah untuk debug aja
@@ -24,6 +25,16 @@ public class Block {
             }
         }
         return effCells;
+    }
+
+
+    public static char getLetter(char[][] shape){
+        for (int i = 0; i < shape.length; i++){
+            for (int j = 0; j < shape[0].length; j++){
+                if(shape[i][j] != ' '){return shape[i][j];}
+            }
+        }
+        return 'A';  // asal aja cuy
     }
 
 
@@ -61,7 +72,7 @@ public class Block {
             char[] currRow = new char[maxCols];
             Arrays.fill(currRow, ' ');  // Pre populate
             String currentLine = shape.get(i);
-            // Fill with actual characters
+
             for (int j = 0; j < currentLine.length(); j++) {
                 currRow[j] = currentLine.charAt(j);
             }
@@ -105,9 +116,13 @@ public class Block {
 
     // Merotasi block sebanyak 90 degree cw, sebanyak 'rotation' kali
     public char[][] rotateBlock(int rotation) {
-        char[][] rotatedShape = new char[rows][cols];
-        int rows = this.rows;
-        int cols = this.cols;
+        int row = this.rows;
+        int col = this.cols;
+
+        // Handle perubahan dimensi jika rotasi 90/270 derajat
+        int newRows = (rotation % 2 == 0) ? row : col;
+        int newCols = (rotation % 2 == 0) ? col : row;
+        char[][] rotatedShape = new char[newRows][newCols];
         switch (rotation) {
             default:
                 return this.shape;
@@ -131,20 +146,23 @@ public class Block {
         return rotatedShape;
     }
 
-    public char[][] mirrorBlock(int mirrorMode){
+    // yang ini harus statik ternyata :( jadi aneh 
+    public static char[][] mirrorBlock(char[][] prevShape, int mirrorMode){
+            int rows = prevShape.length;
+            int cols = prevShape[0].length;
             char[][] mirrored = new char[rows][cols];
             switch (mirrorMode) {
-                case 0: // No mirror
-                    return shape;
-                case 1: // Horizontal
+                default: // No mirror
+                    return prevShape;
+                case 1: // Vertical
                     for (int i = 0; i < rows; i++) {
                         for (int j = 0; j < cols; j++) {
-                            mirrored[i][cols - 1 - j] = shape[i][j];}}
+                            mirrored[i][cols - 1 - j] = prevShape[i][j];}}
                     break;
-                case 2: // Vertical
+                case 2: // Horizontal
                     for (int i = 0; i < rows; i++) {
                         for (int j = 0; j < cols; j++) {
-                            mirrored[rows - 1 - i][j] = shape[i][j];}}
+                            mirrored[rows - 1 - i][j] = prevShape[i][j];}}
                     break;
             }
             return mirrored;
