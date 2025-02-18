@@ -10,7 +10,8 @@ import java.util.Scanner;
 
 // Class untuk menghandle Input user (file)
 public class Input {
-    /* TODO: Perbaiki Error Message */
+    /* TODO: Perbaiki Error Message & Cleanup Debuggin prints*/
+    /* Tambah Cek untuk salah satu block lebih besar dari N atau M */
     private static final char[] alphabets = ("ABCDEFGHIJKLMNOPQRSTUVWXYZ").toCharArray();
     public int N;
     public int M;
@@ -82,13 +83,6 @@ public class Input {
                     }
                 } else { 
                     throw new IllegalStateException("Amount of blocks doesnt match what is declared!"); }
-            }
-
-            
-            // DEBUG
-            for (int i = 0; i < listOfPuzzleBlocks.size(); i++){
-                // System.out.println(listOfPuzzleBlocks.get(i).id);
-                Output.printBlock(listOfPuzzleBlocks.get(i).shape);
             }
             
             Input result = new Input(firstLineList, secondLine, listOfPuzzleBlocks);
