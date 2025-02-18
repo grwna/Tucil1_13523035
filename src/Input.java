@@ -86,9 +86,10 @@ public class Input {
 
             
             // DEBUG
-            // for (int i = 0; i < listOfPuzzleBlocks.size(); i++){
-            //     System.out.println(listOfPuzzleBlocks.get(i).id);
-            // }
+            for (int i = 0; i < listOfPuzzleBlocks.size(); i++){
+                // System.out.println(listOfPuzzleBlocks.get(i).id);
+                Output.printBlock(listOfPuzzleBlocks.get(i).shape);
+            }
             
             Input result = new Input(firstLineList, secondLine, listOfPuzzleBlocks);
             int boardSize = result.N * result.M;
