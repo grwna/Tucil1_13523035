@@ -48,10 +48,18 @@ public class Output {
         }
     }
 
+    public static void createDirectory(String dirPath){
+        File directory = new File(dirPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+    }
+
     public static void handleFileOutput(Board boardResult){
         char[][] board = boardResult.board;
         Scanner scanner = new Scanner(System.in);
         String filepath = "IO/results/";
+        createDirectory(filepath);
         while (true) { 
             Utils.printColorStr("Enter output filename (.txt): ", 190, false);
             filepath = filepath + scanner.nextLine();
@@ -84,7 +92,7 @@ public class Output {
             Utils.clearScreen();
             System.out.println("Successfully written to " + filepath);
         } catch (IOException e) {
-            System.out.println("Error writing to file!");
+            Utils.printColorStr("\nError writing to file!",9,false);
         }
     }
 
@@ -92,6 +100,7 @@ public class Output {
 
         Scanner scanner = new Scanner(System.in);
         String filepath = "IO/results/";
+        createDirectory(filepath);
         while (true) { 
             Utils.printColorStr("Enter image filename (.png): ", 190, false);
             filepath = filepath + scanner.nextLine();
