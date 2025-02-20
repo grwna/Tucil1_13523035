@@ -35,7 +35,31 @@ public class Output {
         }
     }
 
-    // public static void fileOutput(char[][] block){
-        
-    // }
+    public static void handleFileOutput(Board boardResult){
+        char[][] board = boardResult.board;
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter output filename (.txt): ");
+        String filepath = "IO/results/" + scanner.nextLine();
+        System.out.print("Writing to " + filepath);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filepath))) {
+            for (int i = 0; i < board.length; i++){
+                for (int j = 0; j < board[0].length; j++){
+                    char currLetter = board[i][j];
+                    if (currLetter == '.') {
+                        writer.write(" ");
+                        continue;
+                    }
+                    writer.write(currLetter);
+                }
+                writer.newLine();
+                
+            }
+            writer.newLine();
+            writer.write("Execution time: " + fm.format(boardResult.executeTime));
+            writer.newLine();
+            writer.write("Cases evaluated: " + fm.format(boardResult.casesCount));
+        } catch (IOException e) {
+            System.out.println("Error writing to file!");
+        }
+    }
 }
