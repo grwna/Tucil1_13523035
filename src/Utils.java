@@ -137,7 +137,7 @@ public class Utils {
     }
 
     public static void enterToContinue() {
-        System.out.print("\nPress enter to continue...");
+        printColorStr("\nPress enter to continue...", 190, false);
         Scanner scan = new Scanner(System.in);
         scan.nextLine();
         System.out.println();

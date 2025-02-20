@@ -33,7 +33,7 @@ public class Input {
     public static Input handleFileInput() {
         Scanner scanner = new Scanner(System.in);
         try {
-            System.out.print("Enter input filename (.txt): ");
+            Utils.printColorStr("Enter input filename (.txt): ", 190, false);
             String filepath = "IO/input/" + scanner.nextLine();
             System.out.print("Checking " + filepath);
 
@@ -115,11 +115,14 @@ public class Input {
             return result;
         }
          catch (FileNotFoundException e) {
-            System.out.print("Error: File not found!");
+            Utils.clearScreen();
+            Utils.printColorStr("Error: File not found!", 9, true);
         } catch (IllegalStateException e) {
-            System.out.print("Error:\n" + e.getMessage());
+            Utils.clearScreen();
+            Utils.printColorStr("Error: " + e.getMessage(), 9, true);
         } catch (IOException e) {
-            System.out.println("Error: IO failed!");
+            Utils.clearScreen();
+            Utils.printColorStr("Error: IO failed!", 9, true);
         }
         return null;
     }

@@ -25,14 +25,17 @@ public class Board {
     public void solver(List<Block> puzzleBlocks) {
         long startTime = System.currentTimeMillis();
         if (recPuzzleSolver(puzzleBlocks, 0)) {
+            System.out.println("Found a solution!\n");
             Output.printBlock(board);
         }
         else {
             System.out.println("No Solutions found for the given configuration of blocks");
         }
         this.executeTime = System.currentTimeMillis() - startTime;
-        System.out.println("\nExecution time: " + Output.fm.format(executeTime) + " ms");
-        System.out.println("Cases evaluated: " + Output.fm.format(casesCount)+ "\n");
+        System.out.print("\nExecution time: ");
+        Utils.printColorStr(Output.fm.format(executeTime) + " ms", 10, true);
+        System.out.print("Cases evaluated: ");
+        Utils.printColorStr("" + Output.fm.format(casesCount) + "\n", 10, true);
     }
 
     // Solve puzzle menggunakan Recursive Bcaktracking
