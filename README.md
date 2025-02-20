@@ -76,10 +76,12 @@ compile with```./compile.sh``` and run with ```./run.sh```
 
 
  <h3>Usage</h3>
- 
+
 To use the program, make sure you have the text file for the puzzle configurations inside the ```IO/input/``` folder.
 
 All output files are saved in ```IO/results/```.
+
+If you wish, you may delete all files currently inside the ```IO/input/``` and ```IO/results``` folders.
 
 ##  File Structure
 
