@@ -1,15 +1,16 @@
 // Class untuk menghandle Papan puzzle serta solver dan output dari program
 
-import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
 public class Board {
-    public long executeTime;
-    public int casesCount;
+    public long executeTime = 0;
+    public int casesCount = 0;
     public char[][] board;
-    public boolean solved;
+    int rows;
+    int cols;
 
     public Board(int N, int M){
         this.board = new char[N][M];
@@ -17,24 +18,24 @@ public class Board {
         for (char[] row : this.board) {
             Arrays.fill(row, ' ');
         }
-        this.casesCount = 0;
+        this.rows = N;
+        this.cols = M;
     }
 
-    public void mainSolver(List<Block> puzzleBlocks) {
+    public void solver(List<Block> puzzleBlocks) {
         long startTime = System.currentTimeMillis();
         if (recPuzzleSolver(puzzleBlocks, 0)) {
             Output.printBlock(board);
-            this.solved = true;
         }
         else {
             System.out.println("No Solutions found for the given configuration of blocks");
         }
         this.executeTime = System.currentTimeMillis() - startTime;
-        System.out.println("Execution time: " + executeTime + " ms");
-        System.out.println("Cases evaluated: " + casesCount);
+        System.out.println("\nExecution time: " + Output.fm.format(executeTime) + " ms");
+        System.out.println("Cases evaluated: " + Output.fm.format(casesCount)+ "\n");
     }
 
-    // Solve puzzle menggunakan algoritma Recursive Bcaktracking
+    // Solve puzzle menggunakan Recursive Bcaktracking
     public boolean recPuzzleSolver(List<Block> puzzleBlocks, int blockIndex){
         if (blockIndex >= puzzleBlocks.size()) {
             return this.isSolved(); // Basis
@@ -42,8 +43,8 @@ public class Board {
 
         Block currBlock = puzzleBlocks.get(blockIndex);
 
-        for (int row = 0; row < board.length; row++){
-            for (int col = 0; col < board[0].length;col++){
+        for (int row = 0; row < rows; row++){
+            for (int col = 0; col < cols;col++){
 
                 // Cek setiap rotasi dan pencerminan
                 for (int rot = 0; rot < 4; rot++){
@@ -81,8 +82,8 @@ public class Board {
     }
 
     public void placeBlock(char[][] block, int startRow, int startCol){
-        for (int row = 0; row < block.length; row++){
-            for (int col = 0; col < block[0].length; col++){
+        for (int row = 0; row < block.length; row++) {
+            for (int col = 0; col < block[0].length; col++) {
                 if (block[row][col] != ' ') {
                     board[startRow + row][startCol + col] = block[row][col];
 
@@ -92,8 +93,8 @@ public class Board {
     }
 
     public void removeBlock(char[][] block, int startRow, int startCol, char letter){
-        for (int row = 0; row < block.length; row++){
-            for (int col = 0; col < block[0].length; col++){
+        for (int row = 0; row < block.length; row++) {
+            for (int col = 0; col < block[0].length; col++) {
                 if (block[row][col] == letter) {
                     board[startRow + row][startCol + col] = ' ';
                 }
@@ -101,15 +102,14 @@ public class Board {
             }
     }
     public boolean isPlaceable(char[][] block, int startRow, int startCol){
-        int rows = block.length;
-        int cols = block[0].length;
-
+        int rowus = block.length;
+        int colus = block[0].length;
         // Cek index out of bounds
-        if (startRow + rows > board.length || startCol + cols > board[0].length) {
+        if (startRow + rowus > rows || startCol + colus > cols) {
             return false;
         }
-        for (int row = 0; row < rows; row++){
-            for (int col = 0; col < cols; col++){
+        for (int row = 0; row < block.length; row++){
+            for (int col = 0; col < block[0].length; col++){
                 if (block[row][col] != ' ' && board[startRow + row][startCol + col] != ' '){
                     return false;
                 }
@@ -118,10 +118,25 @@ public class Board {
         return true;
     }
 
-    public void clearBoard(){
-        for (char[] boardRow : board) {
-            Arrays.fill(boardRow, ' ');
+    /* ================== BONUS CUSTOM ========================== */
+    // Ingat! ini dipanggil sesudah N dan M di set
+    public void buildCustomBoard(ArrayList<String> parsedBoard){
+        char curr;
+        for (int i = 0; i < rows; i++){
+            for (int j = 0; j < cols; j++){
+                curr = parsedBoard.get(i).charAt(j);
+                this.board[i][j] = curr == 'X' ? ' ' : curr;
+            }
         }
     }
-    
+
+    public static int getEffectiveCells(ArrayList<String> board){
+        int effCells = 0;
+        for (int i = 0; i < board.size(); i++ ){
+            for (int j = 0; j < board.get(i).length(); j++){
+                if (board.get(i).charAt(j) == 'X') {effCells++;}
+            }
+        }
+        return effCells;
+    }
 }
