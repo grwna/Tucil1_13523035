@@ -10,35 +10,35 @@ import java.util.Scanner;
 
 // Class untuk menghandle Input user (file)
 public class Input {
-    /* TODO: Perbaiki Error Message & Cleanup Debuggin prints*/
-    /* Tambah Cek untuk salah satu block lebih besar dari N atau M */
-    private static final char[] alphabets = ("ABCDEFGHIJKLMNOPQRSTUVWXYZ").toCharArray();
+    public static final char[] alphabets = ("ABCDEFGHIJKLMNOPQRSTUVWXYZ").toCharArray();
     public int N;
     public int M;
     public int P;
     public String S;
     public List<Block> puzzleBlocks;
+    public boolean isCustom;
+    public ArrayList<String> board;  
 
-    public Input(int[] NMP, String S, List<Block> listOfBlocks){
+    public Input(int[] NMP, String S, List<Block> listOfBlocks, boolean isCustom, ArrayList<String> board){
         this.N = NMP[0];
         this.M = NMP[1];
         this.P = NMP[2];
         this.S = S;
         this.puzzleBlocks = listOfBlocks;
+        this.isCustom = isCustom;
+        this.board = board;
     }
 
+    // Note: function is very long, not my proudest code :(
     public static Input handleFileInput() {
         Scanner scanner = new Scanner(System.in);
         try {
-            System.out.print("Masukkan nama file input (.txt): ");
-            String filepath = "test/" + scanner.nextLine();
-            scanner.close();
-            System.out.println(filepath);
+            System.out.print("Enter input filename (.txt): ");
+            String filepath = "IO/input/" + scanner.nextLine();
+            System.out.print("Checking " + filepath);
 
             File inputFile = new File(filepath);
             BufferedReader reader = new BufferedReader(new FileReader((inputFile)));
-            // FileReader reader = (new FileReader((inputFile)));
-            System.out.println("File contents:");
 
             String firstLine = reader.readLine();
             
@@ -48,103 +48,83 @@ public class Input {
                 throw new IOException("Invalid line: " + firstLine);
             }
 
-            int[] firstLineList = Arrays.stream(firstLine.split(" "))
+            int[] NMP = Arrays.stream(firstLine.split(" "))
                                         .mapToInt(Integer::parseInt)
                                         .toArray();
 
-            if (firstLineList[2] < 0 || firstLineList[2] > 26) {
+            if (NMP[2] < 1 || NMP[2] > 26) {
                 reader.close();
-                throw new IllegalStateException("Invalid amount for puzzle blocks: " + firstLineList[2]);
+                throw new IllegalStateException("Puzzle blocks must be between 1 - 26");
             }
 
+            System.out.print(".");  // Loading
+            
             String secondLine = reader.readLine();
-            if (!"DEFAULT".equals(secondLine)){
+            if (!"DEFAULT".equals(secondLine) && !"CUSTOM".equals(secondLine)){
                 reader.close();
                 throw new IllegalStateException("Invalid mode: " + secondLine);
             }
+            
+              // Hanya untuk Custom
+            boolean isCustom = "CUSTOM".equals(secondLine);
+            ArrayList<String> board = new ArrayList<>();
+            if (isCustom){board = Utils.parseCustomBoard(reader, NMP[0], NMP[1]);}
 
+
+            //Simpan line2 pada file ke dalam list
             ArrayList<String> blockInputs = new ArrayList<>();
             String line;
             while ((line = reader.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    blockInputs.add(line);      // Ignore empty lines (dihandle tidak dianggap error)
+                if (Utils.containsInvalidChars(line, false)){
+                    throw new IllegalStateException("Found invalid characters when evaluating blocks!");
+                }
+                if (!line.trim().isEmpty()) { // Ignore empty lines (dihandle tidak dianggap error)
+                    blockInputs.add(line);      
                 }
             }
             reader.close();
-            
-            ArrayList<Block> listOfPuzzleBlocks = parseBlocks(blockInputs);
 
+            System.out.print(".");  // Loading
+            
+            if (blockInputs.size() < 1){
+                throw new IllegalStateException("No blocks found!");
+            }
+            ArrayList<Block> listOfPuzzleBlocks = Utils.parseBlocks(blockInputs);
+            
             // cek apakah jumlah sesuai dengan P, agar tidak terlalu banyak variabel, pake list accessing langsung
-            if (listOfPuzzleBlocks.size() != firstLineList[2]){ 
-                if (listOfPuzzleBlocks.size() > firstLineList[2]){
+            if (listOfPuzzleBlocks.size() != NMP[2]){ 
+                if (listOfPuzzleBlocks.size() > NMP[2]){
                     int lastIdx;
-                    while ((lastIdx = listOfPuzzleBlocks.size()) > firstLineList[2]){
+                    System.out.println("Warning! Amount of blocks found is more than declared, some blocks won't be included");
+                    while ((lastIdx = listOfPuzzleBlocks.size()) > NMP[2]){
                         listOfPuzzleBlocks.remove(lastIdx-1);
                     }
                 } else { 
-                    throw new IllegalStateException("Amount of blocks doesnt match what is declared!"); }
-            }
+                    throw new IllegalStateException("Amount of blocks found doesnt match what is declared!"); }
+            } 
+
+            System.out.println(".");  // Loading
             
-            Input result = new Input(firstLineList, secondLine, listOfPuzzleBlocks);
-            int boardSize = result.N * result.M;
+            Input result = new Input(NMP, secondLine, listOfPuzzleBlocks, isCustom, board);
+            int boardSize = isCustom ? Board.getEffectiveCells(board) : result.N * result.M;
             int blocksEffectiveCells = result.sumEffectiveCells();
             if ( boardSize != blocksEffectiveCells ) {
-                throw new IllegalStateException("Ukuran papan dan jumlah blok puzzle tidak sesuai!");
+                throw new IllegalStateException("Size of board does not equal the sum of puzzle block's size!");
             }
 
             return result;
         }
          catch (FileNotFoundException e) {
-            System.out.println("Error: File not found!");
+            System.out.print("Error: File not found!");
         } catch (IllegalStateException e) {
-            System.out.println("Error:\n" + e.getMessage() + "\n\nMake sure the file used contains valid information, check doc for more details");
+            System.out.print("Error:\n" + e.getMessage());
         } catch (IOException e) {
             System.out.println("Error: IO failed!");
         }
         return null;
     }
 
-    private static ArrayList<Block> parseBlocks(ArrayList<String> rawBlocks) {
-        /* Strategi: 
-        *  Simpan line di list, jika curr alphabet != last alphabet (yang ada dilist di instantiasi)\
-        *  kemudian list nya di clear
-        */
-        int index = 0;  // Alphabet index (cek apakah sesuai urutan)
-        ArrayList<Block> output = new ArrayList<>();
-        
-        ArrayList<String> currentBlock = new ArrayList<>();
-        
-        // Cek line by line apakah valid untuk block
-        for (int i = 0; i < rawBlocks.size(); i++){
-            String currLine = rawBlocks.get(i);
-            char currChar = alphabets[index];
-            boolean isLineValid = currLine.indexOf(currChar) != -1;
-            if (!isLineValid) {
-                if (currLine.indexOf(alphabets[(index + 1) % 26]) != -1 ){
-                    try {
-                            index++;
-                            // Pake new ArrayList untuk ngecopy last current block
-                            output.add(new Block(currChar, new ArrayList<>(currentBlock)));
-                            currentBlock.clear();
-                        } catch (IllegalStateException e) {
-                            throw new IllegalStateException("Failed to create block!");
-                        }
-                } else { throw new IllegalStateException("Parsing blocks failed due to invalid input!");}
-            }
-
-            currentBlock.add(currLine);
-        }
-        
-        // Handle last block
-        try {
-            output.add(new Block(alphabets[index], currentBlock));
-        } catch (IllegalStateException e) {
-            throw new IllegalStateException("Failed to create block!");
-        }
-
-        return output;
-    }
-
+    // Mendapatkan jumlah ukuran blok puzzle (utk perbandingan dengan board)
     private int sumEffectiveCells(){
         int sum = 0;
         for(int i = 0; i < puzzleBlocks.size(); i++){
