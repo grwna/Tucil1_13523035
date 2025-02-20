@@ -77,39 +77,43 @@ Y8,        88  8b       d8  8b       d8  8b       88  88       d8   `8b   d8'   
             System.out.println("Starting solver...\n");
             puzzleBoard.solver(fileInputData.puzzleBlocks);
             
-            while (true){
-                    Utils.printColorStr("Save solution? (Y/N) ", 190, false);
-                    input = scan.nextLine().toLowerCase();
-                    if (input.equals("y") || input.equals("n")){
+            if (puzzleBoard.solved){
+                while (true){
+                        Utils.printColorStr("Save solution? (Y/N) ", 190, false);
+                        input = scan.nextLine().toLowerCase();
+                        if (input.equals("y") || input.equals("n")){
+                            break;
+                        }
+                        Utils.clearScreen();
+                        Utils.printColorStr("Invalid option!", 9, true);
+                        Utils.enterToContinue();
+                        Utils.clearScreen();
+    
+                }
+                if (input.equals("y"))
+                while (true) {
+                    Utils.clearScreen();
+                    Utils.printColorStr("1. Output to text file (.txt)", 190, true);
+                    Utils.printColorStr("2. Output to image file (.png)", 190, true);
+                    Utils.printColorStr("\nSelect an option: ", 190, false);
+                    input = scan.nextLine();
+                    System.out.println();
+                    if (input.equals("1") || input.equals("2")){
+                        if (input.equals("1")) {
+                            Utils.clearScreen();
+                            Output.handleFileOutput(puzzleBoard);
+                        } else {
+                            Utils.clearScreen();
+                            Output.handleImageOutput(puzzleBoard);
+                        }
                         break;
                     }
                     Utils.clearScreen();
                     Utils.printColorStr("Invalid option!", 9, true);
                     Utils.enterToContinue();
                     Utils.clearScreen();
-
-            }
-            if (input.equals("y"))
-            while (true) {
-                Utils.clearScreen();
-                Utils.printColorStr("1. Output to text file (.txt)", 190, true);
-                Utils.printColorStr("2. Output to image file (.png)", 190, true);
-                Utils.printColorStr("\nSelect an option: ", 190, false);
-                input = scan.nextLine();
-                System.out.println();
-                if (input.equals("1") || input.equals("2")){
-                    if (input.equals("1")) {
-                        Output.handleFileOutput(puzzleBoard);
-                    } else {
-                        Output.handleImageOutput(puzzleBoard);
                     }
-                    break;
-                }
-                Utils.clearScreen();
-                Utils.printColorStr("Invalid option!", 9, true);
-                Utils.enterToContinue();
-                Utils.clearScreen();
-                }
+            }
             Utils.enterToContinue();
         }
     }

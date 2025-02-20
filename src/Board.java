@@ -9,6 +9,7 @@ public class Board {
     public long executeTime = 0;
     public int casesCount = 0;
     public char[][] board;
+    public boolean solved = false;
     int rows;
     int cols;
 
@@ -27,6 +28,7 @@ public class Board {
         if (recPuzzleSolver(puzzleBlocks, 0)) {
             System.out.println("Found a solution!\n");
             Output.printBlock(board);
+            solved = true;
         }
         else {
             System.out.println("No Solutions found for the given configuration of blocks");
