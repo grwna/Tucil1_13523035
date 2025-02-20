@@ -1,0 +1,8 @@
+ABBCC
+AABCD
+EEEDD
+EEFFF
+GGGFF
+
+Execution time: 448
+Cases evaluated: 1.845.557
