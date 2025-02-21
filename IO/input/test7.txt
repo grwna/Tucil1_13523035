@@ -1,19 +1,19 @@
 5 5 10
 DEFAULT
 GGG
-B
+EE
 BB
 C
+FF
 CC
 E
-EE
+A
 EE
 D
 DD
 FF
-FF
 F
-A
+B
 AA
 llllllllllllllllllllll
 llllllllllllllllllllll

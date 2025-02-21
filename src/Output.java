@@ -72,18 +72,24 @@ public class Output {
         }
         System.out.print("\nWriting to " + filepath + "...");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filepath))) {
-            for (int i = 0; i < board.length; i++){
-                for (int j = 0; j < board[0].length; j++){
-                    char currLetter = board[i][j];
-                    if (currLetter == '.') {
-                        writer.write(" ");
-                        continue;
-                    }
-                    writer.write(currLetter);
-                }
+            if (!boardResult.solved){
+                writer.write("No solutions found for the given configuration of blocks");
                 writer.newLine();
-                
+            } else {
+                for (int i = 0; i < board.length; i++){
+                    for (int j = 0; j < board[0].length; j++){
+                        char currLetter = board[i][j];
+                        if (currLetter == '.') {
+                            writer.write(" ");
+                            continue;
+                        }
+                        writer.write(currLetter);
+                    }
+                    writer.newLine();
+                    
+                }
             }
+            
             writer.newLine();
             writer.write("Execution time: " + fm.format(boardResult.executeTime));
             writer.newLine();
@@ -124,58 +130,76 @@ public class Output {
     }
 
     public static BufferedImage createImage(Board board) {
-        char[][] bord = board.board;
-        int rows = board.rows;
-        int cols = board.cols;
+        BufferedImage image;
+        Graphics2D g2d;
+        int height;
+        int width;
+        Font result;
 
-        int cellWidth = 100;
-        int cellHeight = 100;
-        int width = cols * cellWidth;
-        int height = rows * cellHeight;
-        
-        
-        BufferedImage image = new BufferedImage(width, height + 80, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = image.createGraphics();
-        Font font = new Font("Arial", Font.BOLD, 38);
-        FontMetrics fontMetrics = g2d.getFontMetrics();
-        g2d.setFont(font);
-        
-        // Background
-        g2d.setColor(Color.DARK_GRAY);
-        g2d.fillRect(0, 0, width, height + 400);
+        if (!board.solved) {
+            width = 100;
+            height = 100;
+            image = new BufferedImage(width + 300, height + 200, BufferedImage.TYPE_INT_ARGB);
+            g2d = image.createGraphics();
+            result = new Font("Arial", Font.BOLD, 20);
+            g2d.setFont(result);
+            g2d.drawString("No solutions found for the given", 20, 40);
+            g2d.drawString("configuration of blocks", 20,  80);
+        } else {
+            char[][] bord = board.board;
+            int rows = board.rows;
+            int cols = board.cols;
 
-        // Setiap cell pada board digambarkan sebagai lingkaran berwarna dengan huruf2 blok
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                char currLetter = bord[i][j];
-                if (currLetter == '.') {
-                    continue;
+            int cellWidth = 100;
+            int cellHeight = 100;
+            width = cols * cellWidth;
+            height = rows * cellHeight;
+            
+            
+            image = new BufferedImage(width, height + 80, BufferedImage.TYPE_INT_ARGB);
+            g2d = image.createGraphics();
+            Font font = new Font("Arial", Font.BOLD, 38);
+            FontMetrics fontMetrics = g2d.getFontMetrics();
+            g2d.setFont(font);
+            
+            // Background
+            g2d.setColor(Color.DARK_GRAY);
+            g2d.fillRect(0, 0, width, height + 400);
+
+            // Setiap cell pada board digambarkan sebagai lingkaran berwarna dengan huruf2 blok
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    char currLetter = bord[i][j];
+                    if (currLetter == '.') {
+                        continue;
+                    }
+
+                    int colorIndex = currLetter - 'A'; 
+                    // Ini warna lingkaran
+                    g2d.setColor(new Color(
+                        ansiToRGB[colorIndex][0],
+                        ansiToRGB[colorIndex][1],
+                        ansiToRGB[colorIndex][2]
+                        ));
+
+                    int circleDiameter = 80;
+                    int xCircle = j * cellWidth + (cellWidth - circleDiameter) / 2;
+                    int yCircle = i * cellHeight + (cellHeight - circleDiameter) / 2;
+                    g2d.fillOval(xCircle, yCircle, circleDiameter, circleDiameter);
+
+                    g2d.setColor(Color.WHITE); // warna huruf
+                    String text = String.valueOf(currLetter);
+                    int textWidth = fontMetrics.stringWidth(text);
+                    int textHeight = fontMetrics.getAscent(); 
+                    // Gambar huruf
+                    int xText = xCircle + (circleDiameter - textWidth) / 2 - 6;
+                    int yText = yCircle + (circleDiameter + textHeight) / 2 + 8;
+                    g2d.drawString(text, xText, yText);
+                    }
                 }
-
-                int colorIndex = currLetter - 'A'; 
-                // Ini warna lingkaran
-                g2d.setColor(new Color(
-                    ansiToRGB[colorIndex][0],
-                    ansiToRGB[colorIndex][1],
-                    ansiToRGB[colorIndex][2]
-                    ));
-
-                int circleDiameter = 80;
-                int xCircle = j * cellWidth + (cellWidth - circleDiameter) / 2;
-                int yCircle = i * cellHeight + (cellHeight - circleDiameter) / 2;
-                g2d.fillOval(xCircle, yCircle, circleDiameter, circleDiameter);
-
-                g2d.setColor(Color.WHITE); // warna huruf
-                String text = String.valueOf(currLetter);
-                int textWidth = fontMetrics.stringWidth(text);
-                int textHeight = fontMetrics.getAscent(); 
-                // Gambar huruf
-                int xText = xCircle + (circleDiameter - textWidth) / 2 - 6;
-                int yText = yCircle + (circleDiameter + textHeight) / 2 + 8;
-                g2d.drawString(text, xText, yText);
+                result = new Font("Arial", Font.BOLD, 30);
             }
-        }
-        Font result = new Font("Arial", Font.BOLD, 30);
+        
         g2d.setFont(result);
         g2d.drawString("Execute time: " + fm.format(board.executeTime) + " ms", 20, height + 30);
         g2d.drawString("Cases evaluated: " + fm.format(board.casesCount), 20, height + 70);

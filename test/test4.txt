@@ -1,0 +1,4 @@
+No solutions found for the given configuration of blocks
+
+Execution time: 3
+Cases evaluated: 10.524

@@ -1,0 +1,8 @@
+AABCDDI
+ABBCCDI
+EEFFFHI
+EEFFHHI
+EGGGHHI
+
+Execution time: 1.139
+Cases evaluated: 5.289.299

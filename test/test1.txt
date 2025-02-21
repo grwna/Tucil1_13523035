@@ -4,5 +4,5 @@ EEEDD
 EEFFF
 GGGFF
 
-Execution time: 448
+Execution time: 441
 Cases evaluated: 1.845.557

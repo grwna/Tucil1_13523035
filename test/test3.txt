@@ -1,0 +1,8 @@
+   A   
+ AAABB 
+CCCCBBB
+ CDEEE 
+   E   
+
+Execution time: 50
+Cases evaluated: 258.955

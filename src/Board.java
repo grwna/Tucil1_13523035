@@ -31,7 +31,7 @@ public class Board {
             solved = true;
         }
         else {
-            System.out.println("No Solutions found for the given configuration of blocks");
+            System.out.println("No solutions found for the given configuration of blocks");
         }
         this.executeTime = System.currentTimeMillis() - startTime;
         System.out.print("\nExecution time: ");
@@ -40,7 +40,8 @@ public class Board {
         Utils.printColorStr("" + Output.fm.format(casesCount) + "\n", 10, true);
     }
 
-    // Solve puzzle menggunakan Recursive Bcaktracking
+    // Solve puzzle menggunakan Bruteforce dengan Recursive Bcaktracking
+    // Note: ini setiap failed placement kehitung satu kasus
     public boolean recPuzzleSolver(List<Block> puzzleBlocks, int blockIndex){
         if (blockIndex >= puzzleBlocks.size()) {
             return this.isSolved(); // Basis

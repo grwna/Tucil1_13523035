@@ -1,0 +1,8 @@
+GGGBB
+CDDBA
+CCDAA
+EEEFF
+EEFFF
+
+Execution time: 27.261
+Cases evaluated: 143.859.406
