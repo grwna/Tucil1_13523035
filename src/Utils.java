@@ -7,26 +7,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Utils {
-    public static void printCharMatrix(char[][] charMatrix){
-        int rows = charMatrix.length;
-        int cols = charMatrix[0].length;
-        System.out.print("[\n  ");
-        for (int i = 0; i < rows; i++) {
-            System.out.print("[");
-            for (int j = 0; j < cols; j++) {
-                System.out.print("'" + charMatrix[i][j] + "'");
-                if (j < cols - 1) {
-                    System.out.print(", ");
-                }
-            }
-            System.out.print(" ]");
-            if (i < rows - 1) {
-                System.out.print(", ");
-            }
-        }
-        System.out.println("\n]\n");
-    }
-    
     public static char getLetterString(String string){
         char letter = ' ';
         for (int i = 0; i < string.length(); i++){

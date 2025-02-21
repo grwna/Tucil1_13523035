@@ -1,7 +1,7 @@
   
 </br>
 
-<H3 align="center"> Algoritma Bruteforce : Tugas Kecil 1 IF2211 Strategi Algoritma </p>
+<H3 align="center"> Algoritma Brute Force : Tugas Kecil 1 IF2211 Strategi Algoritma </p>
 
 </br>
 </br>
