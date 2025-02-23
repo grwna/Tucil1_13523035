@@ -166,7 +166,7 @@ public class Output {
             g2d.setColor(Color.DARK_GRAY);
             g2d.fillRect(0, 0, width, height + 400);
 
-            // Setiap cell pada board digambarkan sebagai lingkaran berwarna dengan huruf2 blok
+            // Cell digambar sebagai lingkaran
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
                     char currLetter = bord[i][j];
@@ -175,7 +175,6 @@ public class Output {
                     }
 
                     int colorIndex = currLetter - 'A'; 
-                    // Ini warna lingkaran
                     g2d.setColor(new Color(
                         ansiToRGB[colorIndex][0],
                         ansiToRGB[colorIndex][1],
@@ -187,11 +186,11 @@ public class Output {
                     int yCircle = i * cellHeight + (cellHeight - circleDiameter) / 2;
                     g2d.fillOval(xCircle, yCircle, circleDiameter, circleDiameter);
 
-                    g2d.setColor(Color.WHITE); // warna huruf
+                    g2d.setColor(Color.WHITE);
                     String text = String.valueOf(currLetter);
                     int textWidth = fontMetrics.stringWidth(text);
                     int textHeight = fontMetrics.getAscent(); 
-                    // Gambar huruf
+                    
                     int xText = xCircle + (circleDiameter - textWidth) / 2 - 6;
                     int yText = yCircle + (circleDiameter + textHeight) / 2 + 8;
                     g2d.drawString(text, xText, yText);

@@ -93,14 +93,7 @@ public class Input {
             
             // cek apakah jumlah sesuai dengan P, agar tidak terlalu banyak variabel, pake list accessing langsung
             if (listOfPuzzleBlocks.size() != NMP[2]){ 
-                if (listOfPuzzleBlocks.size() > NMP[2]){
-                    int lastIdx;
-                    System.out.println("Warning! Amount of blocks found is more than declared, some blocks won't be included");
-                    while ((lastIdx = listOfPuzzleBlocks.size()) > NMP[2]){
-                        listOfPuzzleBlocks.remove(lastIdx-1);
-                    }
-                } else { 
-                    throw new IllegalStateException("Amount of blocks found doesnt match what is declared!"); }
+                    throw new IllegalStateException("Amount of blocks found doesnt match what is declared!");
             } 
 
             System.out.println(".");  // Loading
